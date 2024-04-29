@@ -1,41 +1,40 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, EmailStr, PositiveInt, Field
+from fastapi.responses import HTMLResponse
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+
+from src.auth.routers.base import router as auth_router
+from src.book_app.routers.base import router as book_router
 
 app = FastAPI()
 
-
-class User(BaseModel):
-    item_id: PositiveInt
-    age: int = Field(default=18, gt=0, lt=120)
-    name: str = "John"
-    surname: str = "Doe"
-    email: EmailStr
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.get("/items/{item_id}/{name}")
-def get_pass_params(item_id: int, name: str) -> dict:
-    return {"item_id": item_id, "name": name}
+app.include_router(auth_router)
+app.include_router(book_router)
 
 
-@app.get("/items")
-def get_querry_params(item_id: int, name: str) -> dict:
-    return {"item_id": item_id, "name": name}
+@app.get("/get_template", response_class=HTMLResponse)
+def get_html_template(request: Request):
+    users = [
+        {"username": "Peter", "age": 23},
+        {"username": "Max", "age": 20},
+        {"username": "Ann", "age": 15},
+        {"username": "Volodya", "age": 48},
+        {"username": "Elena", "age": 50},
+    ]
+
+    return templates.TemplateResponse(
+        request=request,
+        name="item.html",
+        context={
+            "data": 2132.2,
+            "users": users
+        }
+    )
 
 
-@app.get("/items/{item_id}")
-def get_querry_pass_params(item_id: int, name: str) -> dict:
-    return {"item_id": item_id, "name": name}
 
-
-@app.post("/users", response_model=User)
-def get_user() -> User:
-    # import pdb; pdb.set_trace()
-    user_db = {
-        "item_id": 111,
-        "age": 25,
-        "name": "Jane",
-        "surname": "Doe",
-        "email": "Jane.Doe@example.com"
-    }
-    user = User(**user_db)
-    return user
