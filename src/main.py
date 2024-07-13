@@ -35,6 +35,3 @@ def get_html_template(request: Request):
             "users": users
         }
     )
-
-
-

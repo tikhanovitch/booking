@@ -1,5 +1,4 @@
-from fastapi import APIRouter
-
+from fastapi import APIRouter, Request
 
 router = APIRouter(
     prefix="",
@@ -8,15 +7,24 @@ router = APIRouter(
 
 
 @router.get("/{item_id}/{name}")
-def get_path_params(item_id: int, name: str) -> dict:
-    return {"item_id": item_id, "name": name}
+def get_path_params(item_id: int, name: str, ) -> dict:  # Эндпоинт, вьюшка, ручка
+    return {
+        "item_id": item_id,
+        "name": name
+    }
+
 
 @router.get("/")
-def get_querry_params(item_id: int, name: str) -> dict:
-    return {"item_id": item_id, "name": name}
+def get_query_params() -> dict:
+    return {
+        "DB_PORT": "some port",
+        "DB_HOST": "some host",
+    }
 
 
 @router.get("/{item_id}")
-def get_querry_pass_params(item_id: int, name: str) -> dict:
-    return {"item_id": item_id, "name": name}
-
+def get_query_path_params(item_id: int, name: str) -> dict:
+    return {
+        "item_id": item_id,
+        "name": name
+    }
