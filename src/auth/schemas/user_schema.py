@@ -10,33 +10,64 @@ from pydantic import (
 from src.auth.enums import UserRole
 
 
-class UserBaseSchema(BaseModel):
-    first_name: str
-    last_name: str
-    role: UserRole
+# class UserBaseSchema(BaseModel):
+#     first_name: str
+#     last_name: str
+#     role: UserRole
+#
+#
+# class UserCreateSchema(UserBaseSchema):
+#     pass
+#
+#
+# class UserReadSchema(UserBaseSchema):
+#     created_at: Optional[datetime] = None
+#     updated_at: Optional[datetime] = None
+#
+#
+# class UserUpdatePartialSchema(BaseModel):
+#     first_name: str | None = None
+#     last_name: str | None = None
+#     role: UserRole | None = None
+#
+#
+# class UserUpdateSchema(BaseModel):
+#     first_name: str
+#     last_name: str
+#     role: UserRole
+#
+#
+# class UserCreateRetrieveSchema(UserBaseSchema):
+#     model_config = ConfigDict(from_attributes=True)
+#     id: int
 
 
-class UserCreateSchema(UserBaseSchema):
-    pass
+import uuid
+
+from fastapi_users import schemas
 
 
-class UserReadSchema(UserBaseSchema):
+class BaseUser(schemas.BaseUser[uuid.UUID]):
+    first_name: str | None
+    last_name: str | None
+    role: UserRole | None = "admin"
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
 
-class UserUpdatePartialSchema(BaseModel):
-    first_name: str | None = None
-    last_name: str | None = None
-    role: UserRole | None = None
+class UserRead(schemas.BaseUser[uuid.UUID]):
+    first_name: str | None
+    last_name: str | None
+    role: UserRole | None = "admin"
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
-class UserUpdateSchema(BaseModel):
-    first_name: str
-    last_name: str
-    role: UserRole
+class UserCreate(schemas.BaseUserCreate):
+    pass
 
 
-class UserCreateRetrieveSchema(UserBaseSchema):
-    model_config = ConfigDict(from_attributes=True)
-    id: int
+class UserUpdate(schemas.BaseUserUpdate):
+    first_name: str | None
+    last_name: str | None
+    role: UserRole | None

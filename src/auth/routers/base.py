@@ -3,7 +3,7 @@ from src.auth.routers.auth_router import router as user_router
 
 
 router = APIRouter(
-    prefix="/auth",
+    prefix="/api",
     tags=["Auth"]
 )
 

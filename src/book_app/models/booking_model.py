@@ -14,6 +14,8 @@ from src.core.models.base import (
 
 
 class Booking(Base):
+    __tablename__ = "booking"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4, nullable=True)
     confirmation_id: Mapped[UUID] = mapped_column(default=uuid4, nullable=True)
     description: Mapped[str_300] = mapped_column(nullable=True)
     created_at: Mapped[created_at]
